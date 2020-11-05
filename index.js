@@ -13,6 +13,7 @@ mongoose
     useCreateIndex: true,
     useNewUrlParser: true,
     useUnifiedTopology: true,
+    useFindAndModify: false,
   })
   .then(self => {
     console.log(`Connected to the database: "${self.connection.name}"`);
@@ -22,23 +23,31 @@ mongoose
   .then(() => {
     // Run your code here, after you have insured that the connection was made
     //Iteration 2
+    /*Recipe.create(data[0]).then(recipe => {console.log(recipe.title)
+    })*/
     /*Recipe.create(data[0]).then(() => {
                 console.log("Iteration 2: Document created")
     })*/
 
     //Iteration 3
-    Recipe.insertMany(data).then(() => {
+    Recipe.insertMany(data)
+
+    .then(recipes => recipes.forEach(recipe => {console.log(recipe.title)}))
+
+    .catch(err => console.log(err))
+    /*Recipe.insertMany(data).then(() => {
+      Recipe.create(data[0]).then(recipe => {console.log(recipe.title)
       Recipe.find({},{title: 1, _id: 0})
          .then(recipes => {
            console.log("Iteration 3")
            console.log(recipes)
          })
          .catch(err => console.log(err))
-    })
+    })*/
     //Iteration 4
     Recipe.findOneAndUpdate(
       {title: "Rigatoni alla Genovese"},
-      {$set: {duration: 100}}, {useFindAndModify: false, new: true}
+      {duration: 100}
     ).then(
       console.log("Iteration 4: Success updating")
     ).catch(err => console.log(err))
@@ -59,5 +68,4 @@ mongoose
   .catch(error => {
     console.error('Error connecting to the database', error);
   });
-
-
+  
